@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.LoanApplicationMapper">
+    <insert id="insertLoanApplication" parameterType="com.example.demo.entity.LoanApplication">
+        INSERT INTO loan_applications (user_id, loan_amount, loan_term, loan_interest_rate, application_date, status)
+        VALUES (#{userId}, #{loanAmount}, #{loanTerm}, #{loanInterestRate}, #{applicationDate}, #{status})
+    </insert>
+
+    <update id="updateLoanApplication" parameterType="com.example.demo.entity.LoanApplication">
+        UPDATE loan_applications
+        SET user_id = #{userId}, loan_amount = #{loanAmount}, loan_term = #{loanTerm},
+        loan_interest_rate = #{loanInterestRate}, application_date = #{applicationDate}, status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteLoanApplication" parameterType="java.lang.Long">
+        DELETE FROM loan_applications WHERE id = #{loanApplicationId}
+    </delete>
+
+    <select id="getLoanApplicationById" parameterType="java.lang.Long" resultType="com.example.demo.entity.LoanApplication">
+        SELECT id, user_id, loan_amount, loan_term, loan_interest_rate, application_date, status
+        FROM loan_applications
+        WHERE id = #{loanApplicationId}
+    </select>
+
+    <select id="getAllLoanApplications" resultType="com.example.demo.entity.LoanApplication">
+        SELECT id, user_id, loan_amount, loan_term, loan_interest_rate, application_date, status
+        FROM loan_applications
+    </select>
+</mapper>

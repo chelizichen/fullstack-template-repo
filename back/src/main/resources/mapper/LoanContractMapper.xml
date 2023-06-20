@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.LoanContractMapper">
+    <insert id="insertLoanContract" parameterType="com.example.demo.entity.LoanContract">
+        INSERT INTO loan_contracts (application_id, user_id, contract_amount, contract_term, repayment_schedule, signing_date, status)
+        VALUES (#{applicationId}, #{userId}, #{contractAmount}, #{contractTerm}, #{repaymentSchedule}, #{signingDate}, #{status})
+    </insert>
+
+    <update id="updateLoanContract" parameterType="com.example.demo.entity.LoanContract">
+        UPDATE loan_contracts
+        SET application_id = #{applicationId}, user_id = #{userId}, contract_amount = #{contractAmount},
+        contract_term = #{contractTerm}, repayment_schedule = #{repaymentSchedule},
+        signing_date = #{signingDate}, status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteLoanContract" parameterType="java.lang.Long">
+        DELETE FROM loan_contracts WHERE id = #{loanContractId}
+    </delete>
+
+    <select id="getLoanContractById" parameterType="java.lang.Long" resultType="com.example.demo.entity.LoanContract">
+        SELECT id, application_id, user_id, contract_amount, contract_term, repayment_schedule, signing_date, status
+        FROM loan_contracts
+        WHERE id = #{loanContractId}
+    </select>
+
+    <select id="getAllLoanContracts" resultType="com.example.demo.entity.LoanContract">
+        SELECT id, application_id, user_id, contract_amount, contract_term, repayment_schedule, signing_date, status
+        FROM loan_contracts
+    </select>
+</mapper>
