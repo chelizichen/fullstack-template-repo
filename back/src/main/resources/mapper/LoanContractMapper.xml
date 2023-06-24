@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.LoanContractMapper">
+    <resultMap type="com.example.demo.entity.LoanContract" id="LoanContract">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="application_id" jdbcType="VARCHAR" property="applicationId"/>
+        <result column="contract_amount" jdbcType="VARCHAR" property="contractAmount"/>
+        <result column="contract_term" jdbcType="VARCHAR" property="contractTerm"/>
+        <result column="repayment_schedule" jdbcType="VARCHAR" property="repaymentSchedule"/>
+        <result column="signing_date" jdbcType="VARCHAR" property="signingDate"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber"/>
+        <result column="loan_amount" jdbcType="VARCHAR" property="loanAmount"/>
+        <result column="application_date" jdbcType="VARCHAR" property="applicationDate"/>
+    </resultMap>
+
+    <insert id="insertLoanContract" parameterType="com.example.demo.entity.LoanContract">
+        INSERT INTO loan_contracts (application_id, user_id, contract_amount, contract_term, repayment_schedule, signing_date, status)
+        VALUES (#{applicationId}, #{userId}, #{contractAmount}, #{contractTerm}, #{repaymentSchedule}, #{signingDate}, #{status})
+    </insert>
+
+    <update id="updateLoanContract" parameterType="com.example.demo.entity.LoanContract">
+        UPDATE loan_contracts
+        SET application_id = #{applicationId}, user_id = #{userId}, contract_amount = #{contractAmount},
+        contract_term = #{contractTerm}, repayment_schedule = #{repaymentSchedule},
+        signing_date = #{signingDate}, status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteLoanContract" parameterType="java.lang.Long">
+        DELETE FROM loan_contracts WHERE id = #{loanContractId}
+    </delete>
+
+    <select id="getLoanContractById" parameterType="java.lang.Long" resultType="com.example.demo.entity.LoanContract">
+        SELECT id, application_id, user_id, contract_amount, contract_term, repayment_schedule, signing_date, status
+        FROM loan_contracts
+        WHERE id = #{loanContractId}
+    </select>
+
+    <select id="getAllLoanContracts" resultMap="LoanContract">
+        SELECT loan_contracts.*,
+               users.username,
+               users.phone_number,
+               loan_applications.loan_amount,
+               loan_applications.application_date
+               from loan_contracts
+        LEFT JOIN loan_applications on loan_contracts.application_id = loan_applications.id
+        LEFT JOIN users on users.id = loan_contracts.user_id
+        where 1 = 1 and users.username like #{keyword} limit ${offset},${size}
+    </select>
+
+    <select id="getTotal" resultType="com.example.demo.utils.Total">
+        SELECT count(*) as total
+        from loan_contracts
+                 LEFT JOIN loan_applications on loan_contracts.application_id = loan_applications.id
+                 LEFT JOIN users on users.id = loan_contracts.user_id
+        where 1 = 1 and users.username like #{keyword}
+    </select>
+</mapper>

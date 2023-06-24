@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.RepaymentRecordMapper">
+    <resultMap type="com.example.demo.entity.RepaymentRecord" id="RepaymentRecord">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="contract_id" jdbcType="VARCHAR" property="contractId"/>
+        <result column="repayment_amount" jdbcType="VARCHAR" property="repaymentAmount"/>
+        <result column="repayment_date" jdbcType="VARCHAR" property="repaymentDate"/>
+        <result column="repayment_method" jdbcType="VARCHAR" property="repaymentMethod"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+    </resultMap>
+
+
+    <insert id="insertRepaymentRecord" parameterType="com.example.demo.entity.RepaymentRecord">
+        INSERT INTO repayment_records (contract_id, user_id, repayment_amount, repayment_date, repayment_method)
+        VALUES (#{contractId}, #{userId}, #{repaymentAmount}, #{repaymentDate}, #{repaymentMethod})
+    </insert>
+
+    <update id="updateRepaymentRecord" parameterType="com.example.demo.entity.RepaymentRecord">
+        UPDATE repayment_records
+        SET contract_id = #{contractId}, user_id = #{userId}, repayment_amount = #{repaymentAmount},
+        repayment_date = #{repaymentDate}, repayment_method = #{repaymentMethod}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteRepaymentRecord" parameterType="java.lang.Long">
+        DELETE FROM repayment_records WHERE id = #{repaymentRecordId}
+    </delete>
+
+    <select id="getRepaymentRecordById" parameterType="java.lang.Long" resultType="com.example.demo.entity.RepaymentRecord">
+        SELECT id, contract_id, user_id, repayment_amount, repayment_date, repayment_method
+        FROM repayment_records
+        WHERE id = #{repaymentRecordId}
+    </select>
+
+    <select id="getAllRepaymentRecords" resultMap="RepaymentRecord">
+        SELECT repayment_records.*,users.username
+        FROM repayment_records left join users on users.id = repayment_records.user_id
+        where 1 = 1 and users.username like #{keyword} limit ${offset},${size}
+    </select>
+
+    <select id="getTotal" resultType="com.example.demo.utils.Total">
+
+        SELECT count(*) as total
+        FROM repayment_records left join users on users.id = repayment_records.user_id
+        where 1 = 1 and users.username like #{keyword}
+    </select>
+</mapper>
